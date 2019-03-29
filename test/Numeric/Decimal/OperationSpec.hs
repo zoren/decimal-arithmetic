@@ -193,6 +193,8 @@ spec = do
   describe "power" $ do
     it "power('2', '3')             ==>  '8'" $
       op2 Op.power "2" "3" `shouldBe` "8"
+    it "power('16', '0.5')             ==>  '4'" $
+      op2' Op.power "16" "0.5" `shouldBe` "4.000000000000000000000000000000000"
     it "power('-2', '3')            ==>  '-8'" $
       op2 Op.power "-2" "3" `shouldBe` "-8"
     it "power('2', '-3')            ==>  '0.125'" $
@@ -600,6 +602,11 @@ op0 op = either exceptionError show $ evalArith op newContext
 op1 :: Show a => (BasicDecimal -> BasicArith a) -> String -> String
 op1 op x = either exceptionError show $ evalArith arith newContext
   where arith = op (read x)
+
+op2' :: Show a => (Decimal128 -> Decimal128 -> Arith P34 RoundHalfEven a) -> String
+    -> String -> String
+op2' op x y = either exceptionError show $ evalArith arith newContext
+  where arith = read x `op` read y
 
 op2 :: Show a => (BasicDecimal -> BasicDecimal -> BasicArith a) -> String
     -> String -> String
